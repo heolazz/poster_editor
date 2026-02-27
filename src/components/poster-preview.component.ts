@@ -11,11 +11,11 @@ import { PosterData } from '../models';
       
       <div class="absolute top-0 left-0 right-0 h-[50px] z-20 flex justify-center">
         <div class="bg-white rounded-b-[20px] px-4 py-1.5 h-[50px] flex items-center justify-center gap-3 shadow-lg w-fit min-w-[60%] max-w-[85%] mx-auto">
-           <img src="/logo/Danantara%20Indonesia.png" class="h-6 object-contain">
+           <img src="/logo/danantara_indonesia.png" class="h-6 object-contain">
            <div class="h-5 w-px bg-gray-300"></div>
-           <img src="/logo/BRI_Biru.png" class="h-5 object-contain">
+           <img src="/logo/bri_biru.png" class="h-11 object-contain">
            <div class="h-5 w-px bg-gray-300"></div>
-           <img src="/logo/RB%20Vertical.png" class="h-7 object-contain">
+           <img src="/logo/rb_vertical.png" class="h-7 object-contain">
         </div>
       </div>
 
