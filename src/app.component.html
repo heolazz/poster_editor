@@ -1,39 +1,61 @@
 <div class="flex h-screen w-full flex-col md:flex-row overflow-hidden bg-gray-100">
-  
+
   <!-- Editor Sidebar -->
-  <aside class="w-full md:w-[400px] flex-shrink-0 bg-white shadow-xl z-20 flex flex-col h-full overflow-hidden border-r border-gray-200">
-    <div class="p-6 border-b border-gray-100 bg-gray-50">
-      <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Poster Editor
-      </h1>
-      <p class="text-sm text-gray-500 mt-1">Customize your event details</p>
+  <aside
+    class="w-full md:w-[400px] flex-shrink-0 bg-white shadow-xl z-20 flex flex-col h-full overflow-hidden border-r border-gray-200">
+    <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
+          Poster Editor
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">Customize your event details</p>
+      </div>
+      <button [disabled]="isExporting()" (click)="exportPoster()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed">
+        @if (!isExporting()) {
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        } @else {
+        <svg class="animate-spin -ml-1 mr-1 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
+        </svg>
+        }
+        {{ isExporting() ? 'Exporting...' : 'Export' }}
+      </button>
     </div>
 
     <div class="flex-1 overflow-y-auto p-6 space-y-6">
-      
+
       <!-- Layout Selector -->
       <section>
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Layout</label>
         <div class="grid grid-cols-2 gap-3">
-          <button 
-            (click)="updateLayout('1-speaker')"
-            [class.ring-2]="state().layout === '1-speaker'"
-            [class.bg-blue-50]="state().layout === '1-speaker'"
-            [class.border-blue-500]="state().layout === '1-speaker'"
+          <button (click)="updateLayout('1-speaker')" [class.ring-2]="state().layout === '1-speaker'"
+            [class.bg-blue-50]="state().layout === '1-speaker'" [class.border-blue-500]="state().layout === '1-speaker'"
             class="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all border-gray-200 text-gray-600">
             <div class="w-8 h-10 border-2 border-current rounded mb-2 flex items-end justify-start p-1 bg-white">
               <div class="w-3 h-3 bg-current rounded-full"></div>
             </div>
             <span class="text-sm font-medium">1 Speaker</span>
           </button>
-          <button 
-            (click)="updateLayout('2-speakers')"
-            [class.ring-2]="state().layout === '2-speakers'"
+          <button (click)="updateLayout('2-speakers')" [class.ring-2]="state().layout === '2-speakers'"
             [class.bg-blue-50]="state().layout === '2-speakers'"
             [class.border-blue-500]="state().layout === '2-speakers'"
             class="flex flex-col items-center justify-center p-3 border rounded-lg hover:bg-gray-50 transition-all border-gray-200 text-gray-600">
-             <div class="w-8 h-10 border-2 border-current rounded mb-2 flex items-end justify-center p-1 bg-white gap-1">
+            <div class="w-8 h-10 border-2 border-current rounded mb-2 flex items-end justify-center p-1 bg-white gap-1">
               <div class="w-2.5 h-2.5 bg-current rounded-full"></div>
               <div class="w-2.5 h-2.5 bg-current rounded-full"></div>
             </div>
@@ -45,72 +67,81 @@
       <!-- Images -->
       <section>
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Images</label>
-        
+
         <div class="space-y-3">
           <!-- Top Logo -->
           <div class="flex flex-col gap-2">
             <div class="flex items-center gap-3">
-               <div class="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center relative group cursor-pointer" (click)="triggerFileInput('logoInput')">
-                  @if (state().topLogosUrl) {
-                    <img [src]="state().topLogosUrl" class="w-full h-full object-cover">
-                  } @else {
-                    <span class="text-xs text-gray-400">Logo</span>
-                  }
-                  <div class="absolute inset-0 bg-black/20 hidden group-hover:flex items-center justify-center text-white text-xs">Edit</div>
-               </div>
-               <div class="flex-1">
-                 <label class="text-sm font-medium text-gray-700">Top Header / Logos</label>
-                 <input type="file" id="logoInput" class="hidden" accept="image/*" (change)="onFileSelected($event, 'logo')">
-                 <button (click)="triggerFileInput('logoInput')" class="text-xs text-blue-600 hover:text-blue-800 font-medium block mt-1">Upload new image</button>
-               </div>
+              <div
+                class="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center relative group cursor-pointer"
+                (click)="triggerFileInput('logoInput')">
+                @if (state().topLogosUrl) {
+                <img [src]="state().topLogosUrl" class="w-full h-full object-cover">
+                } @else {
+                <span class="text-xs text-gray-400">Logo</span>
+                }
+                <div
+                  class="absolute inset-0 bg-black/20 hidden group-hover:flex items-center justify-center text-white text-xs">
+                  Edit</div>
+              </div>
+              <div class="flex-1">
+                <label class="text-sm font-medium text-gray-700">Top Header / Logos</label>
+                <input type="file" id="logoInput" class="hidden" accept="image/*"
+                  (change)="onFileSelected($event, 'logo')">
+                <button (click)="triggerFileInput('logoInput')"
+                  class="text-xs text-blue-600 hover:text-blue-800 font-medium block mt-1">Upload new image</button>
+              </div>
             </div>
             <!-- Logo Scale Slider -->
             <div class="flex items-center gap-2 pl-[60px]">
-               <span class="text-[10px] text-gray-400 font-medium w-8">Scale</span>
-               <input 
-                  type="range" 
-                  min="0.5" 
-                  max="3.0" 
-                  step="0.1" 
-                  [ngModel]="state().logoScale" 
-                  (ngModelChange)="updateField('logoScale', $event)" 
-                  class="flex-1 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-               <span class="text-[10px] text-blue-600 font-mono w-6 text-right">{{ state().logoScale }}x</span>
+              <span class="text-[10px] text-gray-400 font-medium w-8">Scale</span>
+              <input type="range" min="0.5" max="3.0" step="0.1" [ngModel]="state().logoScale"
+                (ngModelChange)="updateField('logoScale', $event)"
+                class="flex-1 h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+              <span class="text-[10px] text-blue-600 font-mono w-6 text-right">{{ state().logoScale }}x</span>
             </div>
           </div>
 
-           <!-- Speaker 1 -->
-           <div class="flex items-center gap-3">
-             <div class="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center relative group cursor-pointer" (click)="triggerFileInput('s1Input')">
-                @if (state().speakers[0].photoUrl) {
-                  <img [src]="state().speakers[0].photoUrl" class="w-full h-full object-cover">
-                } @else {
-                  <span class="text-xs text-gray-400">S1</span>
-                }
-             </div>
-             <div class="flex-1">
-               <label class="text-sm font-medium text-gray-700">Speaker 1 Photo</label>
-               <input type="file" id="s1Input" class="hidden" accept="image/*" (change)="onFileSelected($event, 'speaker1')">
-               <button (click)="triggerFileInput('s1Input')" class="text-xs text-blue-600 hover:text-blue-800 font-medium block mt-1">Upload</button>
-             </div>
+          <!-- Speaker 1 -->
+          <div class="flex items-center gap-3">
+            <div
+              class="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center relative group cursor-pointer"
+              (click)="triggerFileInput('s1Input')">
+              @if (state().speakers[0].photoUrl) {
+              <img [src]="state().speakers[0].photoUrl" class="w-full h-full object-cover">
+              } @else {
+              <span class="text-xs text-gray-400">S1</span>
+              }
+            </div>
+            <div class="flex-1">
+              <label class="text-sm font-medium text-gray-700">Speaker 1 Photo</label>
+              <input type="file" id="s1Input" class="hidden" accept="image/*"
+                (change)="onFileSelected($event, 'speaker1')">
+              <button (click)="triggerFileInput('s1Input')"
+                class="text-xs text-blue-600 hover:text-blue-800 font-medium block mt-1">Upload</button>
+            </div>
           </div>
 
           <!-- Speaker 2 (Conditional) -->
           @if (state().layout === '2-speakers') {
-            <div class="flex items-center gap-3 animate-fade-in">
-               <div class="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center relative group cursor-pointer" (click)="triggerFileInput('s2Input')">
-                  @if (state().speakers[1].photoUrl) {
-                    <img [src]="state().speakers[1].photoUrl" class="w-full h-full object-cover">
-                  } @else {
-                    <span class="text-xs text-gray-400">S2</span>
-                  }
-               </div>
-               <div class="flex-1">
-                 <label class="text-sm font-medium text-gray-700">Speaker 2 Photo</label>
-                 <input type="file" id="s2Input" class="hidden" accept="image/*" (change)="onFileSelected($event, 'speaker2')">
-                 <button (click)="triggerFileInput('s2Input')" class="text-xs text-blue-600 hover:text-blue-800 font-medium block mt-1">Upload</button>
-               </div>
+          <div class="flex items-center gap-3 animate-fade-in">
+            <div
+              class="w-12 h-12 bg-gray-100 rounded border border-gray-200 overflow-hidden flex items-center justify-center relative group cursor-pointer"
+              (click)="triggerFileInput('s2Input')">
+              @if (state().speakers[1].photoUrl) {
+              <img [src]="state().speakers[1].photoUrl" class="w-full h-full object-cover">
+              } @else {
+              <span class="text-xs text-gray-400">S2</span>
+              }
             </div>
+            <div class="flex-1">
+              <label class="text-sm font-medium text-gray-700">Speaker 2 Photo</label>
+              <input type="file" id="s2Input" class="hidden" accept="image/*"
+                (change)="onFileSelected($event, 'speaker2')">
+              <button (click)="triggerFileInput('s2Input')"
+                class="text-xs text-blue-600 hover:text-blue-800 font-medium block mt-1">Upload</button>
+            </div>
+          </div>
           }
         </div>
       </section>
@@ -118,219 +149,232 @@
       <!-- Main Text Content -->
       <section class="space-y-4">
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Main Content</label>
-        
+
         <div>
           <label class="block text-xs text-gray-500 mb-1">Headline</label>
-          <textarea 
-            [ngModel]="state().title" 
-            (ngModelChange)="updateField('title', $event)" 
-            class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none" rows="2"></textarea>
+          <textarea [ngModel]="state().title" (ngModelChange)="updateField('title', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+            rows="2"></textarea>
         </div>
-        
+
         <div>
           <label class="block text-xs text-gray-500 mb-1">Subtitle</label>
-          <input 
-            type="text" 
-            [ngModel]="state().subtitle" 
-            (ngModelChange)="updateField('subtitle', $event)" 
+          <input type="text" [ngModel]="state().subtitle" (ngModelChange)="updateField('subtitle', $event)"
             class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none">
         </div>
 
         <div>
-           <label class="block text-xs text-gray-500 mb-1">Badge Text (e.g., GRATIS)</label>
-           <textarea 
-            [ngModel]="state().tagline" 
-            (ngModelChange)="updateField('tagline', $event)" 
-            class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none" rows="2"></textarea>
-            
-            @if (state().layout === '2-speakers') {
-               <div class="mt-3 bg-gray-50 p-2 rounded border border-gray-100 space-y-2">
-                 <div class="flex justify-between items-center">
-                    <label class="text-[10px] font-bold text-gray-500">Badge Scale</label>
-                    <span class="text-[10px] font-mono text-blue-600">{{state().taglineScale}}x</span>
-                 </div>
-                 <input type="range" min="0.5" max="2.0" step="0.05" [ngModel]="state().taglineScale" (ngModelChange)="updateField('taglineScale', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-600">
-                 
-                 <div class="grid grid-cols-2 gap-2 mt-2">
-                    <div class="flex flex-col gap-1">
-                      <div class="flex justify-between">
-                         <span class="text-[9px] text-gray-400">Pos X</span>
-                         <span class="text-[9px] text-blue-600 font-mono">{{ state().taglinePosition.x }}</span>
-                      </div>
-                      <input type="range" min="-100" max="100" [ngModel]="state().taglinePosition.x" (ngModelChange)="updateField('taglinePosition.x', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-600">
-                    </div>
-                    <div class="flex flex-col gap-1">
-                      <div class="flex justify-between">
-                         <span class="text-[9px] text-gray-400">Pos Y</span>
-                         <span class="text-[9px] text-blue-600 font-mono">{{ state().taglinePosition.y }}</span>
-                      </div>
-                      <input type="range" min="-50" max="50" [ngModel]="state().taglinePosition.y" (ngModelChange)="updateField('taglinePosition.y', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-600">
-                    </div>
-                 </div>
-               </div>
-            }
+          <label class="block text-xs text-gray-500 mb-1">Badge Text (e.g., GRATIS)</label>
+          <textarea [ngModel]="state().tagline" (ngModelChange)="updateField('tagline', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+            rows="2"></textarea>
+
+          @if (state().layout === '2-speakers') {
+          <div class="mt-3 bg-gray-50 p-2 rounded border border-gray-100 space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="text-[10px] font-bold text-gray-500">Badge Scale</label>
+              <span class="text-[10px] font-mono text-blue-600">{{state().taglineScale}}x</span>
+            </div>
+            <input type="range" min="0.5" max="2.0" step="0.05" [ngModel]="state().taglineScale"
+              (ngModelChange)="updateField('taglineScale', $event)"
+              class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-600">
+
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between">
+                  <span class="text-[9px] text-gray-400">Pos X</span>
+                  <span class="text-[9px] text-blue-600 font-mono">{{ state().taglinePosition.x }}</span>
+                </div>
+                <input type="range" min="-100" max="100" [ngModel]="state().taglinePosition.x"
+                  (ngModelChange)="updateField('taglinePosition.x', $event)"
+                  class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-600">
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between">
+                  <span class="text-[9px] text-gray-400">Pos Y</span>
+                  <span class="text-[9px] text-blue-600 font-mono">{{ state().taglinePosition.y }}</span>
+                </div>
+                <input type="range" min="-50" max="50" [ngModel]="state().taglinePosition.y"
+                  (ngModelChange)="updateField('taglinePosition.y', $event)"
+                  class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-600">
+              </div>
+            </div>
+          </div>
+          }
         </div>
       </section>
 
       <!-- Date & Location -->
       <section class="space-y-4">
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Event Details</label>
-        
+
         <div class="grid grid-cols-3 gap-2">
           <div class="col-span-1">
-             <label class="block text-xs text-gray-500 mb-1">Day</label>
-             <input type="text" [ngModel]="state().date.day" (ngModelChange)="updateField('date.day', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+            <label class="block text-xs text-gray-500 mb-1">Day</label>
+            <input type="text" [ngModel]="state().date.day" (ngModelChange)="updateField('date.day', $event)"
+              class="w-full p-2 border border-gray-200 rounded text-sm">
           </div>
           <div class="col-span-2">
-             <label class="block text-xs text-gray-500 mb-1">Month</label>
-             <input type="text" [ngModel]="state().date.month" (ngModelChange)="updateField('date.month', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+            <label class="block text-xs text-gray-500 mb-1">Month</label>
+            <input type="text" [ngModel]="state().date.month" (ngModelChange)="updateField('date.month', $event)"
+              class="w-full p-2 border border-gray-200 rounded text-sm">
           </div>
         </div>
-        
+
         <div>
           <label class="block text-xs text-gray-500 mb-1">Time</label>
-           <input type="text" [ngModel]="state().date.time" (ngModelChange)="updateField('date.time', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+          <input type="text" [ngModel]="state().date.time" (ngModelChange)="updateField('date.time', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm">
         </div>
 
         <div>
           <label class="block text-xs text-gray-500 mb-1">Location Line 1</label>
-           <input type="text" [ngModel]="state().location.line1" (ngModelChange)="updateField('location.line1', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+          <input type="text" [ngModel]="state().location.line1" (ngModelChange)="updateField('location.line1', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm">
         </div>
         <div>
           <label class="block text-xs text-gray-500 mb-1">Location Line 2</label>
-           <input type="text" [ngModel]="state().location.line2" (ngModelChange)="updateField('location.line2', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+          <input type="text" [ngModel]="state().location.line2" (ngModelChange)="updateField('location.line2', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm">
         </div>
         <div>
           <label class="block text-xs text-gray-500 mb-1">Location Line 3 (Address)</label>
-           <input type="text" [ngModel]="state().location.line3" (ngModelChange)="updateField('location.line3', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+          <input type="text" [ngModel]="state().location.line3" (ngModelChange)="updateField('location.line3', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm">
         </div>
 
         @if (state().layout === '2-speakers') {
-          <div class="pt-4 border-t border-gray-200 mt-2 space-y-4">
-            
-            <!-- Global Position -->
-            <div>
-              <label class="block text-xs font-bold text-gray-600 mb-2">Box Position</label>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col gap-1">
-                  <div class="flex justify-between">
-                      <span class="text-[10px] text-gray-400">Horizontal (X)</span>
-                      <span class="text-[10px] text-blue-600 font-mono">{{ state().eventDetailsPosition.x }}</span>
-                  </div>
-                  <input type="range" min="-200" max="200" [ngModel]="state().eventDetailsPosition.x" (ngModelChange)="updateField('eventDetailsPosition.x', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+        <div class="pt-4 border-t border-gray-200 mt-2 space-y-4">
+
+          <!-- Global Position -->
+          <div>
+            <label class="block text-xs font-bold text-gray-600 mb-2">Box Position</label>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between">
+                  <span class="text-[10px] text-gray-400">Horizontal (X)</span>
+                  <span class="text-[10px] text-blue-600 font-mono">{{ state().eventDetailsPosition.x }}</span>
                 </div>
-                <div class="flex flex-col gap-1">
-                  <div class="flex justify-between">
-                     <span class="text-[10px] text-gray-400">Vertical (Y)</span>
-                     <span class="text-[10px] text-blue-600 font-mono">{{ state().eventDetailsPosition.y }}</span>
-                  </div>
-                  <input type="range" min="-200" max="200" [ngModel]="state().eventDetailsPosition.y" (ngModelChange)="updateField('eventDetailsPosition.y', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                <input type="range" min="-200" max="200" [ngModel]="state().eventDetailsPosition.x"
+                  (ngModelChange)="updateField('eventDetailsPosition.x', $event)"
+                  class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+              </div>
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between">
+                  <span class="text-[10px] text-gray-400">Vertical (Y)</span>
+                  <span class="text-[10px] text-blue-600 font-mono">{{ state().eventDetailsPosition.y }}</span>
                 </div>
+                <input type="range" min="-200" max="200" [ngModel]="state().eventDetailsPosition.y"
+                  (ngModelChange)="updateField('eventDetailsPosition.y', $event)"
+                  class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
               </div>
             </div>
-
-            <!-- Internal Offset Controls -->
-             <div>
-              <label class="block text-xs font-bold text-gray-600 mb-2">Internal Offset</label>
-              <div class="space-y-3">
-                <!-- Date Offset -->
-                <div>
-                   <span class="text-[10px] font-bold text-gray-500 block mb-1">Date Offset</span>
-                   <div class="grid grid-cols-2 gap-4">
-                      <div class="flex flex-col gap-1">
-                         <div class="flex justify-between">
-                            <span class="text-[9px] text-gray-400">Shift X</span>
-                            <span class="text-[9px] text-blue-600 font-mono">{{ state().dateOffset.x }}</span>
-                         </div>
-                         <input type="range" min="-50" max="50" [ngModel]="state().dateOffset.x" (ngModelChange)="updateField('dateOffset.x', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
-                      </div>
-                      <div class="flex flex-col gap-1">
-                         <div class="flex justify-between">
-                            <span class="text-[9px] text-gray-400">Shift Y</span>
-                            <span class="text-[9px] text-blue-600 font-mono">{{ state().dateOffset.y }}</span>
-                         </div>
-                         <input type="range" min="-30" max="30" [ngModel]="state().dateOffset.y" (ngModelChange)="updateField('dateOffset.y', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
-                      </div>
-                   </div>
-                </div>
-
-                <!-- Location Offset -->
-                <div>
-                   <span class="text-[10px] font-bold text-gray-500 block mb-1">Location Offset</span>
-                   <div class="grid grid-cols-2 gap-4">
-                      <div class="flex flex-col gap-1">
-                         <div class="flex justify-between">
-                            <span class="text-[9px] text-gray-400">Shift X</span>
-                            <span class="text-[9px] text-blue-600 font-mono">{{ state().locationOffset.x }}</span>
-                         </div>
-                         <input type="range" min="-50" max="50" [ngModel]="state().locationOffset.x" (ngModelChange)="updateField('locationOffset.x', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
-                      </div>
-                      <div class="flex flex-col gap-1">
-                         <div class="flex justify-between">
-                            <span class="text-[9px] text-gray-400">Shift Y</span>
-                            <span class="text-[9px] text-blue-600 font-mono">{{ state().locationOffset.y }}</span>
-                         </div>
-                         <input type="range" min="-30" max="30" [ngModel]="state().locationOffset.y" (ngModelChange)="updateField('locationOffset.y', $event)" class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
-                      </div>
-                   </div>
-                </div>
-              </div>
-            </div>
-
           </div>
+
+          <!-- Internal Offset Controls -->
+          <div>
+            <label class="block text-xs font-bold text-gray-600 mb-2">Internal Offset</label>
+            <div class="space-y-3">
+              <!-- Date Offset -->
+              <div>
+                <span class="text-[10px] font-bold text-gray-500 block mb-1">Date Offset</span>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex justify-between">
+                      <span class="text-[9px] text-gray-400">Shift X</span>
+                      <span class="text-[9px] text-blue-600 font-mono">{{ state().dateOffset.x }}</span>
+                    </div>
+                    <input type="range" min="-50" max="50" [ngModel]="state().dateOffset.x"
+                      (ngModelChange)="updateField('dateOffset.x', $event)"
+                      class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <div class="flex justify-between">
+                      <span class="text-[9px] text-gray-400">Shift Y</span>
+                      <span class="text-[9px] text-blue-600 font-mono">{{ state().dateOffset.y }}</span>
+                    </div>
+                    <input type="range" min="-30" max="30" [ngModel]="state().dateOffset.y"
+                      (ngModelChange)="updateField('dateOffset.y', $event)"
+                      class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Location Offset -->
+              <div>
+                <span class="text-[10px] font-bold text-gray-500 block mb-1">Location Offset</span>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="flex flex-col gap-1">
+                    <div class="flex justify-between">
+                      <span class="text-[9px] text-gray-400">Shift X</span>
+                      <span class="text-[9px] text-blue-600 font-mono">{{ state().locationOffset.x }}</span>
+                    </div>
+                    <input type="range" min="-50" max="50" [ngModel]="state().locationOffset.x"
+                      (ngModelChange)="updateField('locationOffset.x', $event)"
+                      class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <div class="flex justify-between">
+                      <span class="text-[9px] text-gray-400">Shift Y</span>
+                      <span class="text-[9px] text-blue-600 font-mono">{{ state().locationOffset.y }}</span>
+                    </div>
+                    <input type="range" min="-30" max="30" [ngModel]="state().locationOffset.y"
+                      (ngModelChange)="updateField('locationOffset.y', $event)"
+                      class="w-full h-1.5 bg-gray-200 rounded-lg cursor-pointer accent-blue-500">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
         }
       </section>
 
       <!-- Speakers Info -->
       <section class="space-y-4">
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Speaker Details</label>
-        
+
         <!-- Speaker 1 -->
         <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
           <p class="text-xs font-bold text-gray-400 mb-2">SPEAKER 1</p>
-          <input type="text" [ngModel]="state().speakers[0].name" (ngModelChange)="updateSpeaker(0, 'name', $event)" placeholder="Name" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
-          <input type="text" [ngModel]="state().speakers[0].role" (ngModelChange)="updateSpeaker(0, 'role', $event)" placeholder="Role/Title" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
-          
+          <input type="text" [ngModel]="state().speakers[0].name" (ngModelChange)="updateSpeaker(0, 'name', $event)"
+            placeholder="Name" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
+          <input type="text" [ngModel]="state().speakers[0].role" (ngModelChange)="updateSpeaker(0, 'role', $event)"
+            placeholder="Role/Title" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
+
           <!-- Image Zoom -->
           <div class="mt-2">
             <div class="flex justify-between items-center mb-1">
-               <label class="text-[10px] text-gray-400 font-medium">Image Scale</label>
-               <span class="text-[10px] text-blue-600 font-mono">{{ state().speakers[0].scale }}x</span>
+              <label class="text-[10px] text-gray-400 font-medium">Image Scale</label>
+              <span class="text-[10px] text-blue-600 font-mono">{{ state().speakers[0].scale }}x</span>
             </div>
-            <input 
-              type="range" 
-              min="0.5" 
-              max="2.0" 
-              step="0.1" 
-              [ngModel]="state().speakers[0].scale" 
-              (ngModelChange)="updateSpeaker(0, 'scale', $event)" 
+            <input type="range" min="0.5" max="2.0" step="0.1" [ngModel]="state().speakers[0].scale"
+              (ngModelChange)="updateSpeaker(0, 'scale', $event)"
               class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
           </div>
         </div>
 
         <!-- Speaker 2 -->
         @if (state().layout === '2-speakers') {
-          <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
-             <p class="text-xs font-bold text-gray-400 mb-2">SPEAKER 2</p>
-             <input type="text" [ngModel]="state().speakers[1].name" (ngModelChange)="updateSpeaker(1, 'name', $event)" placeholder="Name" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
-             <input type="text" [ngModel]="state().speakers[1].role" (ngModelChange)="updateSpeaker(1, 'role', $event)" placeholder="Role/Title" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
-             
-              <!-- Image Zoom -->
-              <div class="mt-2">
-                <div class="flex justify-between items-center mb-1">
-                   <label class="text-[10px] text-gray-400 font-medium">Image Scale</label>
-                   <span class="text-[10px] text-blue-600 font-mono">{{ state().speakers[1].scale }}x</span>
-                </div>
-                <input 
-                  type="range" 
-                  min="0.5" 
-                  max="2.0" 
-                  step="0.1" 
-                  [ngModel]="state().speakers[1].scale" 
-                  (ngModelChange)="updateSpeaker(1, 'scale', $event)" 
-                  class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
-              </div>
+        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <p class="text-xs font-bold text-gray-400 mb-2">SPEAKER 2</p>
+          <input type="text" [ngModel]="state().speakers[1].name" (ngModelChange)="updateSpeaker(1, 'name', $event)"
+            placeholder="Name" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
+          <input type="text" [ngModel]="state().speakers[1].role" (ngModelChange)="updateSpeaker(1, 'role', $event)"
+            placeholder="Role/Title" class="w-full p-2 mb-2 border border-gray-200 rounded text-sm bg-white">
+
+          <!-- Image Zoom -->
+          <div class="mt-2">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-[10px] text-gray-400 font-medium">Image Scale</label>
+              <span class="text-[10px] text-blue-600 font-mono">{{ state().speakers[1].scale }}x</span>
+            </div>
+            <input type="range" min="0.5" max="2.0" step="0.1" [ngModel]="state().speakers[1].scale"
+              (ngModelChange)="updateSpeaker(1, 'scale', $event)"
+              class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
           </div>
+        </div>
         }
       </section>
 
@@ -339,11 +383,14 @@
         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Footer Info</label>
         <div>
           <label class="block text-xs text-gray-500 mb-1">Instagram</label>
-           <input type="text" [ngModel]="state().footer.instagram" (ngModelChange)="updateField('footer.instagram', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+          <input type="text" [ngModel]="state().footer.instagram"
+            (ngModelChange)="updateField('footer.instagram', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm">
         </div>
         <div>
           <label class="block text-xs text-gray-500 mb-1">Contact</label>
-           <input type="text" [ngModel]="state().footer.contact" (ngModelChange)="updateField('footer.contact', $event)" class="w-full p-2 border border-gray-200 rounded text-sm">
+          <input type="text" [ngModel]="state().footer.contact" (ngModelChange)="updateField('footer.contact', $event)"
+            class="w-full p-2 border border-gray-200 rounded text-sm">
         </div>
       </section>
 
@@ -352,8 +399,9 @@
 
   <!-- Preview Area -->
   <main class="flex-1 bg-gray-200/50 flex items-center justify-center p-4 md:p-10 overflow-auto">
-    <div class="shadow-2xl rounded-sm overflow-hidden border border-gray-300 transform transition-transform duration-300 hover:scale-[1.01]">
-       <app-poster-preview [data]="state()"></app-poster-preview>
+    <div
+      class="shadow-2xl rounded-sm overflow-hidden border border-gray-300 transform transition-transform duration-300 hover:scale-[1.01]">
+      <app-poster-preview [data]="state()"></app-poster-preview>
     </div>
   </main>
 </div>

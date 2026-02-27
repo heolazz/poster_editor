@@ -1,8 +1,9 @@
-import { Component, signal, computed, effect } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PosterPreviewComponent } from './components/poster-preview.component';
 import { FormsModule } from '@angular/forms';
 import { PosterData, Speaker } from './models';
+import * as htmlToImage from 'html-to-image';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +35,7 @@ export class AppComponent {
         id: 1,
         name: 'Pembicara 1',
         role: 'Co-Founder',
-        photoUrl: 'https://placehold.co/400x500/png?text=Speaker+1',        
+        photoUrl: 'https://placehold.co/400x500/png?text=Speaker+1',
         scale: 1,
       },
       {
@@ -104,14 +105,14 @@ export class AppComponent {
         this.state.update((s) => {
           if (target === 'logo') return { ...s, topLogosUrl: result };
           if (target === 'speaker1') {
-             const speakers = [...s.speakers];
-             speakers[0] = { ...speakers[0], photoUrl: result };
-             return { ...s, speakers };
+            const speakers = [...s.speakers];
+            speakers[0] = { ...speakers[0], photoUrl: result };
+            return { ...s, speakers };
           }
           if (target === 'speaker2') {
-             const speakers = [...s.speakers];
-             speakers[1] = { ...speakers[1], photoUrl: result };
-             return { ...s, speakers };
+            const speakers = [...s.speakers];
+            speakers[1] = { ...speakers[1], photoUrl: result };
+            return { ...s, speakers };
           }
           return s;
         });
@@ -122,5 +123,42 @@ export class AppComponent {
 
   triggerFileInput(id: string) {
     document.getElementById(id)?.click();
+  }
+
+  isExporting = signal(false);
+
+  async exportPoster() {
+    // Target the poster's actual root element inside poster-preview
+    const posterRoot = document.getElementById('poster-canvas');
+    if (!posterRoot) return;
+
+    this.isExporting.set(true);
+
+    try {
+      // Fixed dimensions matching the poster design
+      const width = 500;
+      const height = 625;
+      const scaleFactor = 2; // 2x for high-res export (1000x1250)
+
+      const dataUrl = await htmlToImage.toPng(posterRoot, {
+        width: width,
+        height: height,
+        pixelRatio: scaleFactor,
+        cacheBust: true,
+        style: {
+          transform: 'none',
+          transformOrigin: 'top left',
+        },
+      });
+
+      const link = document.createElement('a');
+      link.download = `poster-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Error exporting poster:', err);
+    } finally {
+      this.isExporting.set(false);
+    }
   }
 }

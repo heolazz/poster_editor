@@ -7,13 +7,15 @@ import { PosterData } from '../models';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="relative w-[500px] h-[625px] bg-[#007bff] overflow-hidden text-white font-sans flex flex-col shadow-inner select-none">
+    <div id="poster-canvas" class="relative w-[500px] h-[625px] bg-[#007bff] overflow-hidden text-white font-sans flex flex-col shadow-inner select-none">
       
       <div class="absolute top-0 left-0 right-0 h-[50px] z-20 flex justify-center">
-        <div class="bg-white rounded-b-[20px] px-2 py-1 h-full flex items-center justify-center shadow-lg w-[75%] max-w-[320px] overflow-hidden">
-           @if (data().topLogosUrl) {
-             <img [src]="data().topLogosUrl" class="h-full w-full object-contain transition-transform" [style.transform]="'scale(' + data().logoScale + ')'">
-           }
+        <div class="bg-white rounded-b-[20px] px-4 py-1.5 h-[50px] flex items-center justify-center gap-3 shadow-lg w-fit min-w-[60%] max-w-[85%] mx-auto">
+           <img src="/logo/Danantara%20Indonesia.png" class="h-6 object-contain">
+           <div class="h-5 w-px bg-gray-300"></div>
+           <img src="/logo/BRI_Biru.png" class="h-5 object-contain">
+           <div class="h-5 w-px bg-gray-300"></div>
+           <img src="/logo/RB%20Vertical.png" class="h-7 object-contain">
         </div>
       </div>
 
