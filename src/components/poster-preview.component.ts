@@ -13,7 +13,7 @@ import { PosterData } from '../models';
         <div class="bg-white rounded-b-[20px] px-4 py-1.5 h-[50px] flex items-center justify-center gap-3 shadow-lg w-fit min-w-[60%] max-w-[85%] mx-auto">
            <img src="/logo/danantara_indonesia.png" class="h-6 object-contain">
            <div class="h-5 w-px bg-gray-300"></div>
-           <img src="/logo/bri_biru.png" class="h-11 object-contain">
+           <img src="/logo/bri_biru_logo.png" class="h-11 object-contain">
            <div class="h-5 w-px bg-gray-300"></div>
            <img src="/logo/rb_vertical.png" class="h-7 object-contain">
         </div>
