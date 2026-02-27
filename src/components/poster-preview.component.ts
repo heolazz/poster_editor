@@ -241,3 +241,5 @@ import { PosterData } from '../models';
 export class PosterPreviewComponent {
   data = input.required<PosterData>();
 }
+
+// note: untuk logo bri, ganti dengan logo bri yang sesuai
